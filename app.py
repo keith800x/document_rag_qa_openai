@@ -7,6 +7,17 @@ import os
 import streamlit as st
 from dotenv import load_dotenv
 
+from database.db_manager import (
+    init_db,
+    clear_chat_logs,
+    create_qa_session,
+    get_messages_for_session,
+    get_recent_sessions,
+    get_session_by_id,
+    init_db,
+    save_qa_message,
+)
+
 from rag_utils import (
     answer_question,
     build_vector_store,
@@ -23,6 +34,9 @@ def initialise_session_state() -> None:
     """Creates Streamlit session state variables used by the app."""
     if "document_file_id" not in st.session_state:
         st.session_state.document_file_id = None
+
+    if "current_session_id" not in st.session_state:
+        st.session_state.current_session_id = None
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -45,6 +59,8 @@ def clear_document_state() -> None:
     st.session_state.vector_store = None
     st.session_state.document_name = None
     st.session_state.chunk_count = 0
+    st.session_state.document_file_id = None
+    st.session_state.current_session_id = None
     st.session_state.chunks = []
     st.session_state.messages = []
 
@@ -56,12 +72,22 @@ def process_uploaded_document(uploaded_file) -> None:
     chunks = split_documents(documents)
     vector_store = build_vector_store(chunks)
 
-    st.session_state.document_file_id = None
+    # st.session_state.document_file_id = None
+
+    model_name = os.getenv("OPENAI_MODEL", "gpt-5.4-mini")
+
+    session_id = create_qa_session(
+        document_name=uploaded_file.name,
+        chunk_count=len(chunks),
+        model_name=model_name,
+    )
+
 
     st.session_state.vector_store = vector_store
     st.session_state.chunks = chunks
     st.session_state.document_name = uploaded_file.name
     st.session_state.chunk_count = len(chunks)
+    st.session_state.current_session_id = session_id
     st.session_state.messages = []
 
 
@@ -76,23 +102,25 @@ def render_sidebar() -> None:
 
         # if uploaded_file is not None:
         #     file_changed = uploaded_file.name != st.session_state.document_name
-        current_file_id = f"{uploaded_file.name}-{uploaded_file.size}"
-        previous_file_id = st.session_state.get("document_file_id")
+        if uploaded_file is not None:
+            current_file_id = f"{uploaded_file.name}-{uploaded_file.size}"
+            
+            file_changed = current_file_id != st.session_state.document_file_id
 
-        file_changed = current_file_id != previous_file_id
+            if file_changed:
+                try:
 
-        if file_changed:
-            try:
-                with st.spinner("Loading document, splitting chunks, and creating embeddings..."):
-                    process_uploaded_document(uploaded_file)
+                    clear_document_state()
+                    with st.spinner("Loading document, splitting chunks, and creating embeddings..."):
+                        process_uploaded_document(uploaded_file)
 
-                st.session_state.document_file_id = current_file_id
+                    st.session_state.document_file_id = current_file_id
 
-                st.success("RAG index built successfully.")
+                    st.success("RAG index built automatically.")
 
-            except Exception as error:
-                clear_document_state()
-                st.error(f"Could not process the document: {error}")
+                except Exception as error:
+                    clear_document_state()
+                    st.error(f"Could not process the document: {error}")
 
         if st.session_state.vector_store is not None:
             st.success(f"Current document: {st.session_state.document_name}")
@@ -101,6 +129,41 @@ def render_sidebar() -> None:
         if st.button("Clear document and chat"):
             clear_document_state()
             st.rerun()
+
+        if st.button("Clear saved chat logs"):
+            clear_chat_logs()
+            st.success("Saved chat logs cleared.")
+
+        st.divider()
+        st.header("Saved Q&A sessions")
+
+        recent_sessions = get_recent_sessions(limit=5)
+
+        if not recent_sessions:
+            st.caption("No saved sessions yet.")
+        else:
+            for session_id, document_name, chunk_count, model_name, created_at, message_count in recent_sessions:
+                label = f"{document_name} — {message_count} messages"
+
+                if st.button(label, key=f"load_session_{session_id}"):
+                    saved_session = get_session_by_id(session_id)
+
+                    if saved_session is not None:
+                        st.session_state.messages = get_messages_for_session(session_id)
+                        st.session_state.current_session_id = session_id
+                        st.session_state.document_name = saved_session["document_name"]
+                        st.session_state.chunk_count = saved_session["chunk_count"]
+
+                        # Important: this loads chat history only.
+                        # It does not rebuild the ChromaDB index.
+                        st.session_state.vector_store = None
+                        st.session_state.chunks = []
+
+                        st.warning(
+                            "Loaded saved chat history. To ask new questions, upload the same document "
+                            "and rebuild the RAG index."
+                        )
+                        st.rerun()
 
         st.divider()
         st.header("How it works")
@@ -138,6 +201,13 @@ def handle_user_question() -> None:
 
     st.session_state.messages.append({"role": "user", "content": question})
 
+    if st.session_state.current_session_id is not None:
+        save_qa_message(
+            session_id=st.session_state.current_session_id,
+            role="user",
+            content=question,
+        )
+
     with st.chat_message("user"):
         st.markdown(question)
 
@@ -168,10 +238,19 @@ def handle_user_question() -> None:
 
     st.session_state.messages.append({"role": "assistant", "content": answer})
 
+    if st.session_state.current_session_id is not None:
+        save_qa_message(
+            session_id=st.session_state.current_session_id,
+            role="assistant",
+            content=answer,
+            retrieved_context=context,
+        )
+
 
 def main() -> None:
     """Runs the Streamlit app."""
     load_dotenv()
+    init_db()
     st.set_page_config(page_title=APP_TITLE, page_icon="📄", layout="wide")
     initialise_session_state()
 

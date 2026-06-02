@@ -182,6 +182,11 @@ def answer_question(vector_store: Chroma, question: str, all_chunks) -> Tuple[st
         window=NEIGHBOR_WINDOW,
     )
 
+    context_docs = expand_to_same_page(
+        retrieved_docs=context_docs,
+        all_chunks=all_chunks,
+    )
+
     # docs = retrieve_relevant_chunks(vector_store, question, k=k)
     context = format_context(context_docs)
     answer = ask_openai_with_context(question=question, context=context)
@@ -254,3 +259,26 @@ def choose_retrieval_k(question: str) -> int:
         return SPECIFIC_RETRIEVAL_K
 
     return 3
+
+def expand_to_same_page(retrieved_docs, all_chunks):
+    """Adds all chunks from the same page as the retrieved chunks."""
+    if not retrieved_docs:
+        return []
+
+    if not all_chunks:
+        return retrieved_docs
+
+    selected_pages = set()
+
+    for doc in retrieved_docs:
+        page = doc.metadata.get("page")
+        if page is not None:
+            selected_pages.add(page)
+
+    expanded_docs = [
+        chunk
+        for chunk in all_chunks
+        if chunk.metadata.get("page") in selected_pages
+    ]
+
+    return expanded_docs if expanded_docs else retrieved_docs

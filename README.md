@@ -90,14 +90,13 @@ streamlit run app.py
 **User question:**
 
 ```text
-What Completed looks like for Error Handling?
+What is considered completed for error handling in the capstone project?
 ```
 
 **Expected output:**
 
 ```text
-For Error Handling, a Completed result looks like this: API failures or empty responses are caught and communicated to the user, and the application does not crash with an unhandled exception.
-Source: page 6, Chunk 5
+For error handling, the project is considered complete if it handles errors by showing a clear message when an API call fails or returns nothing, and it does not crash with an unhandled error or exception. This is stated in Chunk 5 / page 3.
 ```
 
 ### Example 2
@@ -105,21 +104,19 @@ Source: page 6, Chunk 5
 **User question:**
 
 ```text
-What is the Presentation Slide Structure?
+What is the presentation slide structure?
 ```
 
 **Expected output:**
 
 ```text
-The Presentation Slide Structure is shown on page 5.
+The presentation slide structure is:
 
-It says the slides should include:
-
-Slide 1 — Title: Project name, your name, and one sentence describing what the application does.
-Slide 2 — The Problem: What problem your application addresses, who would use it, and why AI is the right tool.
-Slide 3 — How It Works: A simple diagram or bullets showing the flow: user input → your code → AI API → output.
-Live Demo: No slide needed; switch directly to the application and show at least two different inputs.
-Slide 5 — What You Learned: One harder-than-expected thing and how you handled it, one thing you would do differently, and one idea for what comes next.
+1. Title — Project name, your name, and one sentence describing what the application does.
+2. The Problem — What problem your application addresses, who would use it, and why AI is the right tool for it.
+3. How It Works — A simple diagram or a few bullet points showing the flow: user input → your code → AI API → output.
+4. Live Demo — No slide is needed; switch directly to your application, show at least two different inputs, and explain what is happening as you go.
+5. What You Learned — One thing that was harder than expected and how you worked through it, one thing you would do differently, and one idea for what comes next.
 
 Source: page 5, Chunk 5.
 ```
