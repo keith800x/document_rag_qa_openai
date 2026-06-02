@@ -21,6 +21,9 @@ APP_TITLE = "Document RAG Q&A - OpenAI"
 
 def initialise_session_state() -> None:
     """Creates Streamlit session state variables used by the app."""
+    if "document_file_id" not in st.session_state:
+        st.session_state.document_file_id = None
+
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
@@ -53,6 +56,8 @@ def process_uploaded_document(uploaded_file) -> None:
     chunks = split_documents(documents)
     vector_store = build_vector_store(chunks)
 
+    st.session_state.document_file_id = None
+
     st.session_state.vector_store = vector_store
     st.session_state.chunks = chunks
     st.session_state.document_name = uploaded_file.name
@@ -69,17 +74,25 @@ def render_sidebar() -> None:
             type=["pdf", "txt", "md"],
         )
 
-        if uploaded_file is not None:
-            file_changed = uploaded_file.name != st.session_state.document_name
+        # if uploaded_file is not None:
+        #     file_changed = uploaded_file.name != st.session_state.document_name
+        current_file_id = f"{uploaded_file.name}-{uploaded_file.size}"
+        previous_file_id = st.session_state.get("document_file_id")
 
-            if file_changed and st.button("Build RAG index", type="primary"):
-                try:
-                    with st.spinner("Loading document, splitting chunks, and creating embeddings..."):
-                        process_uploaded_document(uploaded_file)
-                    st.success("RAG index built successfully.")
-                except Exception as error:
-                    clear_document_state()
-                    st.error(f"Could not process the document: {error}")
+        file_changed = current_file_id != previous_file_id
+
+        if file_changed:
+            try:
+                with st.spinner("Loading document, splitting chunks, and creating embeddings..."):
+                    process_uploaded_document(uploaded_file)
+
+                st.session_state.document_file_id = current_file_id
+
+                st.success("RAG index built successfully.")
+
+            except Exception as error:
+                clear_document_state()
+                st.error(f"Could not process the document: {error}")
 
         if st.session_state.vector_store is not None:
             st.success(f"Current document: {st.session_state.document_name}")
