@@ -115,11 +115,11 @@ The Presentation Slide Structure is shown on page 5.
 
 It says the slides should include:
 
-* Slide 1 — Title: Project name, your name, and one sentence describing what the application does.
-* Slide 2 — The Problem: What problem your application addresses, who would use it, and why AI is the right tool.
-* Slide 3 — How It Works: A simple diagram or bullets showing the flow: user input → your code → AI API → output.
-* Live Demo: No slide needed; switch directly to the application and show at least two different inputs.
-* Slide 5 — What You Learned: One harder-than-expected thing and how you handled it, one thing you would do differently, and one idea for what comes next.
+Slide 1 — Title: Project name, your name, and one sentence describing what the application does.
+Slide 2 — The Problem: What problem your application addresses, who would use it, and why AI is the right tool.
+Slide 3 — How It Works: A simple diagram or bullets showing the flow: user input → your code → AI API → output.
+Live Demo: No slide needed; switch directly to the application and show at least two different inputs.
+Slide 5 — What You Learned: One harder-than-expected thing and how you handled it, one thing you would do differently, and one idea for what comes next.
 
 Source: page 5, Chunk 5.
 ```
