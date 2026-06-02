@@ -1,0 +1,32 @@
+# Environment variables and API keys
+.env
+.env.*
+!.env.example
+
+# Python virtual environment
+.venv/
+venv/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local Chroma or temporary files, if you choose to persist later
+chroma_db/
+.chroma/
+chromadb/
+*.sqlite3
+
+
+# OS/editor files
+.DS_Store
+.vscode/
+.idea/
+
+
+# Streamlit secrets
+.streamlit/secrets.toml
+sample_documents/sample_note.md
+sample_questions.md
+OPENAI_NOTES.md
+CAPSTONE_CHECKLIST.md
