@@ -90,13 +90,14 @@ streamlit run app.py
 **User question:**
 
 ```text
-What does RAG mean?
+What Completed looks like for Error Handling?
 ```
 
 **Expected output:**
 
 ```text
-RAG means Retrieval-Augmented Generation. The application retrieves relevant document chunks, then sends those chunks to a language model to generate an answer.
+For Error Handling, a Completed result looks like this: API failures or empty responses are caught and communicated to the user, and the application does not crash with an unhandled exception.
+Source: page 6, Chunk 5
 ```
 
 ### Example 2
@@ -104,13 +105,23 @@ RAG means Retrieval-Augmented Generation. The application retrieves relevant doc
 **User question:**
 
 ```text
-What are the project requirements mentioned in the document?
+What is the Presentation Slide Structure?
 ```
 
 **Expected output:**
 
 ```text
-The document says a good capstone project should accept user input, connect to an AI API, have a clear purpose, use a named system prompt, handle errors, and include clear setup instructions.
+The Presentation Slide Structure is shown on page 5.
+
+It says the slides should include:
+
+    Slide 1 — Title: Project name, your name, and one sentence describing what the application does.
+    Slide 2 — The Problem: What problem your application addresses, who would use it, and why AI is the right tool.
+    Slide 3 — How It Works: A simple diagram or bullets showing the flow: user input → your code → AI API → output.
+    Live Demo: No slide needed; switch directly to the application and show at least two different inputs.
+    Slide 5 — What You Learned: One harder-than-expected thing and how you handled it, one thing you would do differently, and one idea for what comes next.
+
+Source: page 5, Chunk 5.
 ```
 
 ### Example 3
