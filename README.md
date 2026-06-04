@@ -140,6 +140,7 @@ I cannot find this in the document.
 1. Scanned image PDFs may not extract text correctly because this project does not include OCR.
 2. The app retrieves only a few chunks per question, so an answer may be incomplete if the relevant chunk is not retrieved.
 3. The app uses an online OpenAI API, so it requires internet access and a valid API key.
+4. Saved sessions store previous questions and answers in SQLite, but the document index is not permanently restored. To continue asking questions after restarting the app, the user must upload the document again and rebuild the RAG index.
 
 ## 7. Future Improvements
 

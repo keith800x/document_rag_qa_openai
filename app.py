@@ -196,7 +196,7 @@ def handle_user_question() -> None:
         return
 
     if st.session_state.vector_store is None:
-        st.warning("Please upload a document and click 'Build RAG index' first.")
+        st.warning("Please upload a document")
         return
 
     st.session_state.messages.append({"role": "user", "content": question})
