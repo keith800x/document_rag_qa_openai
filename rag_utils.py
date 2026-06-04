@@ -8,9 +8,8 @@ This file follows a standard RAG flow:
 5. Retrieve the most relevant chunks for a user question.
 6. Send only the retrieved context to OpenAI for answer generation.
 """
-
 from __future__ import annotations
-
+from uuid import uuid4
 import os
 import tempfile
 from pathlib import Path
@@ -39,13 +38,13 @@ NEIGHBOR_WINDOW = 1
 EMBEDDING_MODEL_NAME = "sentence-transformers/all-MiniLM-L6-v2"
 
 
-def save_uploaded_file_to_temp(uploaded_file) -> str:
-    """Saves a Streamlit uploaded file to a temporary path and returns that path."""
-    suffix = Path(uploaded_file.name).suffix.lower()
+# def save_uploaded_file_to_temp(uploaded_file) -> str:
+#     """Saves a Streamlit uploaded file to a temporary path and returns that path."""
+#     suffix = Path(uploaded_file.name).suffix.lower()
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_file:
-        temp_file.write(uploaded_file.getbuffer())
-        return temp_file.name
+#     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as temp_file:
+#         temp_file.write(uploaded_file.getbuffer())
+#         return temp_file.name
 
 
 def load_document_from_path(file_path: str) -> List[Document]:
@@ -94,7 +93,7 @@ def build_vector_store(chunks: List[Document]) -> Chroma:
     return Chroma.from_documents(
         documents=chunks,
         embedding=embeddings,
-        collection_name="uploaded_document_collection",
+        collection_name=f"session_{uuid4().hex}",
     )
 
 
