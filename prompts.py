@@ -20,7 +20,6 @@ Constraints:
 Output:
 Provide a clear answer in this format when possible:
 
-Answer:
 <answer to the user's question>
 
 Source:
