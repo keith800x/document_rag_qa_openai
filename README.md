@@ -85,6 +85,10 @@ streamlit run app.py
 
 ## 5. Usage Examples
 
+```text
+Upload an document, in the is example I will upload 20260515_AI_Bootcamp_Capstone_Requirements.pdf
+```
+
 ### Example 1
 
 **User question:**
