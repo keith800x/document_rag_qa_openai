@@ -16,7 +16,7 @@ chroma_db/
 .chroma/
 chromadb/
 *.sqlite3
-
+data/
 
 # OS/editor files
 .DS_Store
