@@ -321,7 +321,7 @@ def main() -> None:
     st.set_page_config(page_title=APP_TITLE, page_icon="📄", layout="wide")
     initialise_session_state()
 
-    st.title("📄 Document RAG Q&A - OpenAI")
+    st.title("📄 Document RAG Q&A Assistant")
     st.write(
         "Upload a document, build a RAG index, then ask questions. "
         "The app retrieves relevant chunks and asks OpenAI to answer only from those chunks."
