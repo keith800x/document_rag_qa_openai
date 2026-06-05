@@ -1,4 +1,4 @@
-"""Streamlit front end for the OpenAI Document RAG Q&A project."""
+"""Streamlit front end for the Document RAG Q&A Assistant."""
 
 from __future__ import annotations
 
@@ -26,7 +26,7 @@ from rag_utils import (
 
 
 
-APP_TITLE = "Document RAG Q&A - OpenAI"
+APP_TITLE = "Document RAG Q&A Assistant"
 
 
 def initialise_session_state() -> None:
