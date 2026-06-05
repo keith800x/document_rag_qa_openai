@@ -283,7 +283,7 @@ The app uses an external AI API, so users should avoid uploading private or rest
 
 ## About the Author
 
-**Keith Lua** - [LinkedIn](www.linkedin.com/in/keith-lua) | [Github](https://github.com/keith800x/)
+**Keith Lua** - [LinkedIn](https://www.linkedin.com/in/keith-lua) | [Github](https://github.com/keith800x/)
 
 ---
 
